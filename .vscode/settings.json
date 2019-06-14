@@ -1,3 +1,10 @@
 {
-    "python.pythonPath": "venv/bin/python3.7"
+    "python.pythonPath": "venv/bin/python",
+    "sqltools.connections": [
+        {
+            "database": "./uploader_api/uploader_db.sqlite",
+            "dialect": "SQLite",
+            "name": "uploader"
+        }
+    ]
 }

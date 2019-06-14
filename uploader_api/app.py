@@ -3,10 +3,9 @@ import logging.config
 import os
 from flask import Flask, Blueprint
 from uploader_api import settings
-from uploader_api.api.blog.endpoints.posts import ns as blog_posts_namespace
-from uploader_api.api.blog.endpoints.categories import ns as blog_categories_namespace
+from uploader_api.api.upload.endpoints.upload_intents import ns as upload_namespace
 from uploader_api.api.restplus import api
-from uploader_api.database import db
+from uploader_api.database import db, reset_database
 
 app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), '../logging.conf'))
@@ -29,13 +28,15 @@ def initialize_app(flask_app):
 
     blueprint = Blueprint('api', __name__, url_prefix='/api')
     api.init_app(blueprint)
-    api.add_namespace(blog_posts_namespace)
-    api.add_namespace(blog_categories_namespace)
+    api.add_namespace(upload_namespace)
     flask_app.register_blueprint(blueprint)
-
-    db.init_app(flask_app)
-
-
+    
+    db.init_app(flask_app)    
+    with app.app_context():
+        # Extensions like Flask-SQLAlchemy now know what the "current" app
+        # is while within this block. Therefore, you can now run........
+        # db.drop_all()
+        db.create_all()
 def main():
     initialize_app(app)
     log.info('>>>>> Starting development server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))

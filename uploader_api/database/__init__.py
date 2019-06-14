@@ -4,6 +4,6 @@ db = SQLAlchemy()
 
 
 def reset_database():
-    from uploader_api.database.models import Post, Category  # noqa
-    db.drop_all()
+    from uploader_api.database.models import UploadIntent  # noqa
+    # db.drop_all()
     db.create_all()
